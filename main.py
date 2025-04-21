@@ -1,45 +1,61 @@
-from agent import QLearningAgent, PolicyGradientAgent
-from env.maze_env import MazeEnv
+import numpy as np
 import time
+import pickle
+import os
+from env.maze_env import MazeEnv
+from agent.q_learning_agent import QLearningAgent
 
-
-env = MazeEnv(size=(20, 20))  # Size of the maze
-# agent_type = input("Select agent (q or pg): ").strip()
-
-# if agent_type == "q":
+# إعداد البيئة
+size = (10, 10)
+env = MazeEnv(size=size)
 agent = QLearningAgent(action_space=env.action_space)
-# elif agent_type == "pg":
-#     agent = PolicyGradientAgent(input_size=env.observation_space.n, output_size=env.action_space.n)
-# else:
-#     raise ValueError("Wrong Choice!")
 
-
-
-# Training
+# تدريب العميل
+agent.q_table = np.zeros((env.observation_space.n, env.action_space.n))
 num_episodes = 2000
+q_table_path = "training/q_table.pkl"
+
+# بداية التدريب إذا لم يكن هناك Q-table موجود
 for episode in range(num_episodes):
     state = env.reset()
     done = False
     total_reward = 0
 
     while not done:
-        action = agent.get_action(state) 
-        next_state, reward, done, _ = env.step(action)  
-        total_reward += reward
-
-        # Update based on result
+        action = agent.get_action(state)
+        next_state, reward, done, _ = env.step(action)
         agent.learn(state, action, reward, next_state, done)
         state = next_state
+        total_reward += reward
 
-    print(f"Episode {episode+1}/{num_episodes}, Total Reward: {total_reward}")
+    print(f"Episode {episode+1}/{num_episodes} - Total Reward: {total_reward}")
 
-print("\n** Training Complete. Now displaying the solution path. **\n")
+    # حفظ الـ Q-table المدرب
+    with open(q_table_path, "wb") as f:
+        pickle.dump(agent.q_table, f)
 
-# Best path found
+else:
+    # تحميل Q-table إذا كان موجود
+    with open(q_table_path, "rb") as f:
+        agent.q_table = pickle.load(f)
+
+# عرض حركة عشوائية قبل التعلم
+print("Maze before learning:")
+# state = env.reset()
+# done = False
+# while not done:
+#     action = env.action_space.sample()  # حركة عشوائية
+#     next_state, reward, done, _ = env.step(action)
+#     state = next_state
+#     env.render()
+#     time.sleep(0.01)
+
+# عرض أفضل مسار بعد التعلم
+print("Best path after learning:")
 state = env.reset()
 done = False
 while not done:
-    action = agent.get_action(state)
+    action = agent.get_action(state)  # استخدام الـ Q-table لاختيار الحركة
     next_state, reward, done, _ = env.step(action)
     state = next_state
     env.render()
