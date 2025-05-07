@@ -26,10 +26,10 @@ class MazeEnv(gym.Env):
     def step(self, action):
         x, y = self.agent_position
 
-        if action == 0: x -= 1  # UP
-        elif action == 1: x += 1  # DOWN
-        elif action == 2: y -= 1  # LEFT
-        elif action == 3: y += 1  # RIGHT
+        if action == 0: x -= 1
+        elif action == 1: x += 1
+        elif action == 2: y -= 1
+        elif action == 3: y += 1
 
         if 0 <= x < self.size[0] and 0 <= y < self.size[1] and self.maze[x, y] == 0:
             self.agent_position = (x, y)
