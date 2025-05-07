@@ -1,7 +1,6 @@
 import numpy as np
 import time
 import pickle
-import os
 from env.maze_env import MazeEnv
 from agent.q_learning_agent import QLearningAgent
 
@@ -12,7 +11,7 @@ agent = QLearningAgent(action_space=env.action_space)
 
 # تدريب العميل
 agent.q_table = np.zeros((env.observation_space.n, env.action_space.n))
-num_episodes = 2000
+num_episodes = 1000
 q_table_path = "training/q_table.pkl"
 
 # بداية التدريب إذا لم يكن هناك Q-table موجود

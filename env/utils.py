@@ -62,19 +62,30 @@ def render_maze(maze, agent_pos, goal_pos):
     gx, gy = goal_pos
     grid[gx, gy] = 2 
 
-    colors = ['black', 'lightgray', 'green']
+    # تحسين الألوان: 0=جدار، 1=مسار، 2=هدف
+    colors = ['dimgray', 'white', 'gold']
     cmap = ListedColormap(colors)
     bounds = [-0.5, 0.5, 1.5, 2.5]
     norm = BoundaryNorm(bounds, cmap.N)
 
     plt.imshow(grid, cmap=cmap, norm=norm)
+
+    # رسم شبكة خفيفة لتوضيح الخلايا
+    rows, cols = grid.shape
+    for x in range(rows + 1):
+        plt.axhline(x - 0.5, color='gray', linewidth=0.3)
+    for y in range(cols + 1):
+        plt.axvline(y - 0.5, color='gray', linewidth=0.3)
+
     plt.xticks([])
     plt.yticks([])
 
+    # الوكيل (Agent)
     ax, ay = agent_pos
-    circle = plt.Circle((ay, ax), 0.3, color='blue')
+    circle = plt.Circle((ay, ax), 0.3, color='blue', ec='black', lw=1)
     plt.gca().add_patch(circle)
 
+    plt.gca().set_aspect('equal')  # خلى الخلايا مربعة
     plt.pause(0.1)
     plt.clf()
 
