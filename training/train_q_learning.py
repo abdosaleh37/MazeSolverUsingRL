@@ -1,9 +1,7 @@
 from agent.q_learning_agent import QLearningAgent
-import pickle
 import matplotlib.pyplot as plt
 
-
-def train_q_agent(env , num_episodes=2000, q_table_path="training/q_table.pkl"):
+def train_q_agent(env , num_episodes):
     state_size = env.observation_space.n
     agent = QLearningAgent(action_space=env.action_space, state_size=state_size)
     rewards = []
@@ -29,8 +27,8 @@ def train_q_agent(env , num_episodes=2000, q_table_path="training/q_table.pkl"):
     plt.ioff()
     plt.show(block=False)
     
-    with open(q_table_path, "wb") as f:
-        pickle.dump(agent.q_table, f)
+    q_table_path="training/q_table.pkl"
+    agent.save(q_table_path)
     print("Training complete and Q-table saved.")
     
     return agent

@@ -21,7 +21,6 @@ class QLearningAgent:
 
     def learn(self, state, action, reward, next_state, done):
         current_q = self.q_table[state, action]
-
         max_next_q = np.max(self.q_table[next_state])
 
         if done:
