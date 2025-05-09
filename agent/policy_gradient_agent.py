@@ -1,41 +1,41 @@
-import torch
-import torch.nn as nn
-import torch.optim as optim
 import numpy as np
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 
 class PolicyGradientAgent:
-    def __init__(self, input_size, output_size):
-        self.fc = torch.nn.Sequential(
-            torch.nn.Linear(input_size, 128),
-            torch.nn.ReLU(),
-            torch.nn.Linear(128, output_size),
-            torch.nn.Softmax(dim=-1)
-        )
+    def __init__(self, n_states, n_actions, lr=0.1):
+        self.n_states = n_states
+        self.n_actions = n_actions
+        self.lr = lr
+        self.policy = np.ones((n_states, n_actions)) / n_actions
+        self.episode_states = []
+        self.episode_actions = []
+        self.episode_rewards = []
 
-    def forward(self, x):
-        return self.fc(x)
-    
     def get_action(self, state):
-        state_array = np.array(state)
-        state_tensor = torch.tensor(state_array.flatten(), dtype=torch.float32)
+        probs = self.policy[state]
+        action = np.random.choice(self.n_actions, p=probs)
+        self.episode_states.append(state)
+        self.episode_actions.append(action)
+        return action
 
-        probs = self.forward(state_tensor)
-        action = torch.multinomial(probs, 1)
-        return action.item() 
+    def store_reward(self, reward):
+        self.episode_rewards.append(reward)
 
-    def learn(self, state, action, reward, next_state, done):
-        state_tensor = torch.FloatTensor(state).unsqueeze(0)
-        action_tensor = torch.LongTensor([action])
-        reward_tensor = torch.FloatTensor([reward])
+    def learn(self, gamma=0.99):
+        G = 0
+        returns = []
+        for r in reversed(self.episode_rewards):
+            G = r + gamma * G
+            returns.insert(0, G)
+        returns = np.array(returns)
+        returns = (returns - returns.mean()) / (returns.std() + 1e-9)
 
-        probs = self(state_tensor)
-        prob_distribution = torch.nn.functional.softmax(probs, dim=-1)
-        action_prob = prob_distribution[0, action_tensor]
+        for state, action, Gt in zip(self.episode_states, self.episode_actions, returns):
+            baseline = self.policy[state]
+            grad = np.eye(self.n_actions)[action] - baseline
+            self.policy[state] += self.lr * Gt * grad
+            self.policy[state] = np.clip(self.policy[state], 1e-8, 1)
+            self.policy[state] /= self.policy[state].sum()
 
-        loss = -torch.log(action_prob) * reward_tensor
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
+        self.episode_states = []
+        self.episode_actions = []
+        self.episode_rewards = [] 

@@ -1,14 +1,12 @@
 from agent.q_learning_agent import QLearningAgent
-import matplotlib.pyplot as plt
+from training.train_pg import plot_rewards
 
-def train_q_agent(env , num_episodes):
+def train_q_agent(env, num_episodes):
     state_size = env.observation_space.n
-    agent = QLearningAgent(action_space=env.action_space, state_size=state_size)
+    action_space = env.action_space.n
+    agent = QLearningAgent(action_space=action_space, state_size=state_size)
     rewards = []
-    
-    plt.ion()
-    plt.figure("Learning Curve")
-    
+        
     for episode in range(num_episodes):
         state = env.reset()
         done = False
@@ -22,10 +20,8 @@ def train_q_agent(env , num_episodes):
             total_reward += reward
         
         rewards.append(total_reward)
-        draw_learning_curve(rewards, episode, num_episodes, total_reward)
-
-    plt.ioff()
-    plt.show(block=False)
+        plot_rewards(rewards, agent_type="Q-Learning")
+        print(f"Episode {episode+1}/{num_episodes} - Total Reward: {total_reward}")
     
     q_table_path="training/q_table.pkl"
     agent.save(q_table_path)
@@ -34,16 +30,6 @@ def train_q_agent(env , num_episodes):
     return agent
 
 
-def draw_learning_curve(rewards, episode, num_episodes, total_reward):
-    plt.figure("Learning Curve")
-    plt.clf()
-    plt.plot(rewards)
-    plt.xlabel("Episode")
-    plt.ylabel("Total Reward")
-    plt.title("Q-Learning: Learning Curve")
-    plt.grid(True)
-    plt.draw()
-    plt.pause(0.05)
-    print(f"Episode {episode+1}/{num_episodes} - Total Reward: {total_reward}")
+
 
     

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, BoundaryNorm
 
-def generate_maze(size=(10, 10), wall_prob=0.3, max_attempts=100):
+def generate_maze(size=(10, 10), wall_prob=0.4, max_attempts=100):
     maze = np.zeros(size)
     for i in range(size[0]):
         for j in range(size[1]):
@@ -85,5 +85,4 @@ def render_maze(maze, agent_pos, goal_pos):
 
     plt.gca().set_aspect('equal')
     plt.pause(0.1)
-    plt.clf()
 

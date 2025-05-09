@@ -2,19 +2,19 @@ import numpy as np
 import pickle
 
 class QLearningAgent:
-    def __init__(self, action_space, state_size, epsilon=0.1, alpha=0.1, gamma=0.9):
+    def __init__(self, action_space, state_size, epsilon=0.1, alpha=0.5, gamma=0.9):
         self.action_space = action_space
         self.epsilon = epsilon
         self.alpha = alpha
         self.gamma = gamma
-        self.q_table = np.zeros((state_size, action_space.n))
+        self.q_table = np.zeros((state_size, action_space))
 
     def get_action(self, state):
         if np.random.rand() < self.epsilon:
-            return np.random.choice(self.action_space.n)
+            return np.random.choice(self.action_space)
         else:
             if state >= len(self.q_table):  
-                return np.random.choice(self.action_space.n)
+                return np.random.choice(self.action_space)
             else:
                 return np.argmax(self.q_table[state])
 
