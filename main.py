@@ -11,7 +11,7 @@ def main():
         return
 
     num_episodes = 300
-    size = (10, 10)
+    size = (15, 15)
     env = MazeEnv(size=size)
 
     if selected_agent['type'] == 'q':
