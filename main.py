@@ -5,20 +5,28 @@ from training.train_pg import train_pg_agent
 from visualization.select_agent import select_agent_window
 
 def main():
+    # Display the agent selection window and store the selected agent in a dictionary
     selected_agent = select_agent_window()
+    
+    # Check if an agent was selected. If not, print a message and exit
     if selected_agent['type'] is None:
         print('No agent selected. Exiting.')
         return
 
+    # Set the number of episodes for training and the size of the maze
     num_episodes = 300
     size = (15, 15)
+    
+    # Initialize the maze environment with the specified size
     env = MazeEnv(size=size)
 
+    # Train the agent based on the selection
     if selected_agent['type'] == 'q':
         agent = train_q_agent(env=env, num_episodes=num_episodes)
     else:
         agent = train_pg_agent(env=env, num_episodes=num_episodes)
 
+    # Start the simulation after training
     state = env.reset()
     done = False
     while not done:
@@ -27,6 +35,8 @@ def main():
         env.render()
         state = next_state
         time.sleep(0.1)
+        
+    # Wait for the user to press Enter before closing the program
     input('Press Enter to close...')
 
 if __name__ == '__main__':
