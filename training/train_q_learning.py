@@ -51,10 +51,8 @@ def train_q_agent(env, num_episodes):
         rewards.append(total_reward)
         steps.append(total_steps)
         
-        # Visualize the learning curve based on rewards and steps
-        plot_learning_curve(values=rewards, agent_type="Q Learning", curve_type="Rewards")
-        # to plot steps uncomment the next line (it slows down the running!)
-        #plot_learning_curve(values=steps, agent_type="Q Learning", curve_type="Steps")
+        # Visualize both rewards and steps in one plot
+        plot_learning_curve(rewards=rewards, steps=steps, agent_type="Q Learning")
         
         # Print the result of the current episode
         print(f"Episode {(episode+1):>3}/{num_episodes} - Total Reward: {total_reward:>4} - Total Steps: {total_steps:>4}")

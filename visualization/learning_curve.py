@@ -1,35 +1,48 @@
 from matplotlib import pyplot as plt
 
-def plot_learning_curve(values, agent_type, curve_type):
+# Create a global figure and axes that will be reused
+fig = None
+ax1 = None
+ax2 = None
+
+def plot_learning_curve(rewards, steps, agent_type):
     """
-    Plots the learning curve of the agent during training.
+    Plots rewards and steps curves in separate subplots side by side.
 
     Parameters:
-    - values: A list of values representing either rewards or steps accumulated during training.
+    - rewards: A list of reward values accumulated during training.
+    - steps: A list of step counts accumulated during training.
     - agent_type: The type of agent used (e.g., "Policy Gradient" or "Q Learning").
-    - curve_type: The type of curve to plot, either "Rewards" or "Steps".
-
-    This function plots the graph of values against episodes and updates the plot dynamically.
     """
-    # Create a new figure for the curve, with a title based on the curve type 
-    plt.figure(f"{curve_type} Curve")
+    global fig, ax1, ax2
     
-    # Clear the current figure to prepare for new plot data
-    plt.clf()
+    # Create figure and subplots only if they don't exist
+    if fig is None:
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+        plt.suptitle(f'{agent_type}: Learning Curves', fontsize=12)
+        plt.tight_layout()
     
-    # Plot the values against the episodes (values list)
-    plt.plot(values)
+    # Clear the previous plots
+    ax1.clear()
+    ax2.clear()
     
-    # Label the x-axis as "Episode"
-    plt.xlabel("Episode")
+    # Plot rewards in the left subplot
+    ax1.plot(rewards, color='tab:blue', label='Rewards')
+    ax1.set_xlabel('Episode')
+    ax1.set_ylabel('Total Reward')
+    ax1.grid(True, alpha=0.3)
+    ax1.legend(loc='upper left')
     
-    # Label the y-axis dynamically based on the curve type
-    plt.ylabel(f"Total {curve_type}")
+    # Plot steps in the right subplot
+    ax2.plot(steps, color='tab:red', label='Steps')
+    ax2.set_xlabel('Episode')
+    ax2.set_ylabel('Total Steps')
+    ax2.grid(True, alpha=0.3)
+    ax2.legend(loc='upper left')
     
-    # Set the title of the plot to reflect the agent type and curve type
-    plt.title(f"{agent_type}: {curve_type} Curve")
+    # Adjust layout to prevent overlap
+    plt.tight_layout()
     
-    # Enable grid lines for better visualization of the curve
-    plt.grid(True)
+    # Update the plot
     plt.draw()
     plt.pause(0.05)
