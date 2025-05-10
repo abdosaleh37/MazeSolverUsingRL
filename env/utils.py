@@ -1,6 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap, BoundaryNorm
 
 def generate_maze(size=(10, 10), wall_prob=0.4, max_attempts=100):
     """
@@ -71,39 +69,4 @@ def has_path(maze, start, goal, visited=None):
             return True
 
     return False
-
-# Render the current maze environment using matplotlib.
-def render_maze(maze, agent_pos, goal_pos):
-    grid = np.copy(maze)
-
-    gx, gy = goal_pos
-    grid[gx, gy] = 2    # Mark the goal with a different value
-
-    # Define color map: 0 = wall (dark), 1 = path (white), 2 = goal (yellow)
-    colors = ['dimgray', 'white', 'gold']
-    cmap = ListedColormap(colors)
-    bounds = [-0.5, 0.5, 1.5, 2.5]
-    norm = BoundaryNorm(bounds, cmap.N)
-
-    plt.figure("Maze View")
-    plt.clf()
-    plt.imshow(grid, cmap=cmap, norm=norm)
-
-    # Draw grid lines
-    rows, cols = grid.shape
-    for x in range(rows + 1):
-        plt.axhline(x - 0.5, color='gray', linewidth=0.3)
-    for y in range(cols + 1):
-        plt.axvline(y - 0.5, color='gray', linewidth=0.3)
-
-    plt.xticks([])
-    plt.yticks([])
-
-    # Draw agent as a blue circle
-    ax, ay = agent_pos
-    circle = plt.Circle((ay, ax), 0.3, color='blue', ec='black', lw=1)
-    plt.gca().add_patch(circle)
-
-    plt.gca().set_aspect('equal')
-    plt.pause(0.1)
 

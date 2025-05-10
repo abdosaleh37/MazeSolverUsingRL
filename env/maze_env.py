@@ -1,7 +1,8 @@
 import gym
 from gym import spaces
 import numpy as np
-from .utils import generate_maze, render_maze
+from .utils import generate_maze
+from .pygame_renderer import PygameMazeRenderer
 
 class MazeEnv(gym.Env):
     """
@@ -20,6 +21,9 @@ class MazeEnv(gym.Env):
         
         self.action_space = spaces.Discrete(4)  # 4 actions: up, down, right, left
         self.observation_space = spaces.Discrete(size[0] * size[1])
+        
+        # Initialize renderer as None - will be created when needed
+        self.renderer = None
 
     def _get_state(self):
         x, y = self.agent_position
@@ -58,7 +62,15 @@ class MazeEnv(gym.Env):
 
     def render(self):
         """
-        Render the current state of the environment.
+        Render the current state of the environment using Pygame.
         This visualizes the maze, agent, and goal.
         """
-        render_maze(self.maze, self.agent_position, self.goal)
+        if self.renderer is None:
+            self.renderer = PygameMazeRenderer(self.size)
+        return self.renderer.render(self.maze, self.agent_position, self.goal)
+    
+    def close(self):
+        """Close the environment and clean up resources."""
+        if self.renderer is not None:
+            self.renderer.close()
+            self.renderer = None

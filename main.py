@@ -26,18 +26,22 @@ def main():
     else:
         agent = train_pg_agent(env=env, num_episodes=num_episodes)
 
+    print("\nTraining complete! Starting visualization of the learned path...")
+    print("Press Enter to close the visualization window when done.")
+    
     # Start the simulation after training
     state = env.reset()
     done = False
     while not done:
         action = agent.get_action(state)
         next_state, reward, done, _ = env.step(action)
-        env.render()
+        env.render()  # This will now create the Pygame window only when first called
         state = next_state
         time.sleep(0.1)
-        
+    
     # Wait for the user to press Enter before closing the program
     input('Press Enter to close...')
+    env.close()
 
 if __name__ == '__main__':
     main()
