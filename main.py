@@ -14,7 +14,7 @@ def main():
         return
 
     # Set the number of episodes for training and the size of the maze
-    num_episodes = 300
+    num_episodes = 200
     size = (15, 15)
     
     # Initialize the maze environment with the specified size
