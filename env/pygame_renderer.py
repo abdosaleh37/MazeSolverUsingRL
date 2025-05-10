@@ -30,7 +30,7 @@ class PygameMazeRenderer:
         }
         
         # Animation properties
-        self.animation_speed = 0.1  # seconds per frame
+        self.animation_speed = 0.2  # seconds per frame
         self.last_update = 0
         
     def render(self, maze, agent_pos, goal_pos):

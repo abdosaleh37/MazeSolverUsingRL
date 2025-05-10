@@ -1,7 +1,7 @@
 import numpy as np
 
 class PolicyGradientAgent:
-    def __init__(self, n_states, n_actions, lr=0.15, lr_decay=0.999, entropy_coef=0.01, min_prob=0.05, temperature=1.0):
+    def __init__(self, n_states, n_actions, lr=0.185, lr_decay=0.999, entropy_coef=0.01, min_prob=0.05, temperature=1.0):
         """
         Initialize the Policy Gradient Agent with necessary parameters.
 

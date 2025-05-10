@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+import ttkbootstrap as tb
 
 def select_agent_window():
     # Create a dictionary to store the selected agent type
@@ -11,7 +12,7 @@ def select_agent_window():
         root.destroy()
 
     # Create the root window
-    root = tk.Tk()
+    root = tb.Window(themename="cyborg")  # Use a modern theme
     root.title('Select RL Agent')   # Set the title of the window
     root.geometry("600x400")        # Increased window size
     root.resizable(False, False)
@@ -33,43 +34,42 @@ def select_agent_window():
     except Exception as e:
         print(f"Could not load background image: {e}")
         # Use default background color for UI elements
-        root.configure(bg="#f0f4f8")
+        root.configure(bg="#1a1a1a")
         title_bg = "#f0f4f8"
         frame_bg = "#f0f4f8"
 
-    # Create a frame for title and buttons at the bottom
-    bottom_frame = tk.Frame(root, highlightthickness=0)
-    bottom_frame.place(relx=0.5, rely=1.0, anchor='s', relwidth=1.0, y=-40)  # 40px above the bottom
+    # Canvas for semi-transparent title background
+    canvas = tk.Canvas(root, width=600, height=80, highlightthickness=0)
+    canvas.place(relx=0.5, rely=0.68, anchor='center')
+    # Draw a semi-transparent rounded rectangle
+    canvas.create_rectangle(80, 10, 520, 70, fill="#222222", outline="#222222", width=0)
+    # Title text
+    canvas.create_text(300, 40, text="Choose an agent to train:", font=("Segoe UI", 22, "bold"),
+                       fill="#fff", anchor='center')
 
-    # Create a label that will display the title on the window
-    title = tk.Label(bottom_frame, text='Choose an agent to train:', font=("Segoe UI", 20, "bold"), fg="#333")
-    title.pack(pady=(0, 20))   # Reduced top padding, increased bottom padding
+    # Use ttkbootstrap's rounded buttons
+    style = tb.Style()
+    style.configure("Custom.TButton",
+                    font=("Segoe UI", 16, "bold"),
+                    padding=10)
 
-    # Create a frame to hold the buttons for selecting the agent
-    btn_frame = tk.Frame(bottom_frame)
-    btn_frame.pack()
+    # Create a frame to hold both buttons, centered at the bottom
+    btn_frame = tk.Frame(root, bg="#8f5cff", highlightthickness=0)
+    btn_frame.place(relx=0.5, rely=0.88, anchor='center')
 
-    # Define a style for the buttons
-    btn_style = {
-        "width": 20,  # Increased button width
-        "height": 2,
-        "font": ("Segoe UI", 14, "bold"),
-        "bg": "#4f8cff",
-        "fg": "white",
-        "activebackground": "#357ae8",
-        "activeforeground": "white",
-        "bd": 0,
-        "relief": "flat",
-        "cursor": "hand2"
-    }
+    q_btn = tb.Button(
+        btn_frame, text='Q-Learning', bootstyle="info-outline", style="Custom.TButton",
+        width=18,  # Slightly reduced width
+        command=lambda: set_agent('q')
+    )
+    q_btn.pack(side='left', padx=(0, 15), ipady=10)  # 15px space to the right
 
-    # Create the "Q-Learning" button and assign the corresponding action
-    q_btn = tk.Button(btn_frame, text='Q-Learning', command=lambda: set_agent('q'), **btn_style)
-    q_btn.grid(row=0, column=0, padx=25, pady=10)  # Increased padding between buttons
-
-    # Create the "Policy Gradient" button and assign the corresponding action
-    pg_btn = tk.Button(btn_frame, text='Policy Gradient', command=lambda: set_agent('pg'), **btn_style)
-    pg_btn.grid(row=0, column=1, padx=25, pady=10)  # Increased padding between buttons
+    pg_btn = tb.Button(
+        btn_frame, text='Policy Gradient', bootstyle="info-outline", style="Custom.TButton",
+        width=18,  # Slightly reduced width
+        command=lambda: set_agent('pg')
+    )
+    pg_btn.pack(side='left', padx=(15, 0), ipady=10)  # 15px space to the left
 
     # Center the window on the screen
     root.eval('tk::PlaceWindow . center')

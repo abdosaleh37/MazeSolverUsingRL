@@ -25,9 +25,6 @@ def main():
         agent = train_q_agent(env=env, num_episodes=num_episodes)
     else:
         agent = train_pg_agent(env=env, num_episodes=num_episodes)
-
-    print("\nTraining complete! Starting visualization of the learned path...")
-    print("Press Enter to close the visualization window when done.")
     
     # Start the simulation after training
     state = env.reset()
@@ -35,7 +32,7 @@ def main():
     while not done:
         action = agent.get_action(state)
         next_state, reward, done, _ = env.step(action)
-        env.render()  # This will now create the Pygame window only when first called
+        env.render()
         state = next_state
         time.sleep(0.1)
     
