@@ -2,26 +2,27 @@ import time
 from env.maze_env import MazeEnv
 from training.train_q_learning import train_q_agent
 from training.train_pg import train_pg_agent
-from visualization.select_agent import select_agent_window
+from visualization.select_agent import select_agent
 
 def main():
-    # Display the agent selection window and store the selected agent in a dictionary
-    selected_agent = select_agent_window()
-    
-    # Check if an agent was selected. If not, print a message and exit
-    if selected_agent['type'] is None:
-        print('No agent selected. Exiting.')
-        return
-
-    # Set the number of episodes for training and the size of the maze
+     # Set the number of episodes for training and the size of the maze
     num_episodes = 200
     size = (15, 15)
     
     # Initialize the maze environment with the specified size
     env = MazeEnv(size=size)
 
+    # Display the agent selection window and store the selected agent in a dictionary
+    agent_type = select_agent()
+    
+    # Check if an agent was selected. If not, print a message and exit
+    if agent_type is None:
+        print('No agent selected. Exiting.')
+        return
+
+
     # Train the agent based on the selection
-    if selected_agent['type'] == 'q':
+    if agent_type == 'q':
         agent = train_q_agent(env=env, num_episodes=num_episodes)
     else:
         agent = train_pg_agent(env=env, num_episodes=num_episodes)

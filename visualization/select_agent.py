@@ -1,79 +1,116 @@
-import tkinter as tk
-from PIL import Image, ImageTk
-import ttkbootstrap as tb
+import pygame
+import sys
 
-def select_agent_window():
-    # Create a dictionary to store the selected agent type
-    selected_agent = {'type': None}
-    
-    # Define a function to set the selected agent and close the window
-    def set_agent(agent_type):
-        selected_agent['type'] = agent_type
-        root.destroy()
-
-    # Create the root window
-    root = tb.Window(themename="cyborg")  # Use a modern theme
-    root.title('Select RL Agent')   # Set the title of the window
-    root.geometry("600x400")        # Increased window size
-    root.resizable(False, False)
-    
-    # Load and set background image
-    bg_photo = None
-    try:
-        bg_image = Image.open("assets/background.jpg")
-        bg_image = bg_image.resize((600, 400), Image.Resampling.LANCZOS)  # Resize to match new window size
-        bg_photo = ImageTk.PhotoImage(bg_image)
+class AgentSelector:
+    def __init__(self):
+        pygame.init()
+        self.width, self.height = 800, 600
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption("Select Agent Type")
         
-        # Create a label for the background image
-        bg_label = tk.Label(root, image=bg_photo)
-        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+        # Load and scale background image
+        self.background = pygame.image.load("assets/background.jpg")
+        self.background = pygame.transform.scale(self.background, (self.width, self.height))
         
-        # If image loads successfully, use a semi-transparent background for UI elements
-        title_bg = "#f0f4f8"  # Light blue with some transparency
-        frame_bg = "#f0f4f8"
-    except Exception as e:
-        print(f"Could not load background image: {e}")
-        # Use default background color for UI elements
-        root.configure(bg="#1a1a1a")
-        title_bg = "#f0f4f8"
-        frame_bg = "#f0f4f8"
+        # Colors
+        self.colors = {
+            'button': (128, 0, 128),
+            'button_hover': (75, 0, 75),
+            'text': (255, 255, 255)
+        }
+        
+        # Fonts
+        self.label_font = pygame.font.Font(None, 50)
+        self.button_font = pygame.font.Font(None, 36)
+        
+        # Button dimensions and positions
+        self.button_width, self.button_height = 300, 80
+        self.button_space = 20
+        y_buttons = 480
+        self.q_learning_button = pygame.Rect(
+            80, y_buttons, self.button_width, self.button_height
+        )
+        self.policy_gradient_button = pygame.Rect(
+            120 + self.button_width + self.button_space, y_buttons, self.button_width, self.button_height
+        )
 
-    # Canvas for semi-transparent title background
-    canvas = tk.Canvas(root, width=600, height=80, highlightthickness=0)
-    canvas.place(relx=0.5, rely=0.68, anchor='center')
-    # Draw a semi-transparent rounded rectangle
-    canvas.create_rectangle(80, 10, 520, 70, fill="#222222", outline="#222222", width=0)
-    # Title text
-    canvas.create_text(300, 40, text="Choose an agent to train:", font=("Segoe UI", 22, "bold"),
-                       fill="#fff", anchor='center')
+    def draw_button(self, rect, text, hover=False):
+        color = self.colors['button_hover'] if hover else self.colors['button']
+        pygame.draw.rect(self.screen, color, rect, border_radius=15)
+        self.draw_maze_game_style_text(
+            self.screen, text, rect.center, self.button_font,
+            self.colors['text'], (180, 120, 255), (0, 0, 0), spacing=2
+        )
 
-    # Use ttkbootstrap's rounded buttons
-    style = tb.Style()
-    style.configure("Custom.TButton",
-                    font=("Segoe UI", 16, "bold"),
-                    padding=10)
+    def draw_maze_game_style_text(self, surface, text, center, font, main_color, glow_color, shadow_color=None, spacing=4):
+        text = text.upper()
+        x, y = center
+        text_height = font.size("A")[1]
+        y = y - text_height // 2
+        total_width = sum(font.size(c)[0] + spacing for c in text) - spacing
+        start_x = x - total_width // 2
 
-    # Create a frame to hold both buttons, centered at the bottom
-    btn_frame = tk.Frame(root, bg="#8f5cff", highlightthickness=0)
-    btn_frame.place(relx=0.5, rely=0.88, anchor='center')
+        # Glow
+        for dx, dy in [(-4, 0), (4, 0), (0, -4), (0, 4), (-2, -2), (2, 2), (-2, 2), (2, -2)]:
+            letter_x = start_x + dx
+            for c in text:
+                letter_surface = font.render(c, True, glow_color)
+                surface.blit(letter_surface, (letter_x, y + dy))
+                letter_x += font.size(c)[0] + spacing
 
-    q_btn = tb.Button(
-        btn_frame, text='Q-Learning', bootstyle="info-outline", style="Custom.TButton",
-        width=18,  # Slightly reduced width
-        command=lambda: set_agent('q')
-    )
-    q_btn.pack(side='left', padx=(0, 15), ipady=10)  # 15px space to the right
+        # Shadow
+        if shadow_color:
+            letter_x = start_x + 2
+            for c in text:
+                letter_surface = font.render(c, True, shadow_color)
+                surface.blit(letter_surface, (letter_x, y + 2))
+                letter_x += font.size(c)[0] + spacing
 
-    pg_btn = tb.Button(
-        btn_frame, text='Policy Gradient', bootstyle="info-outline", style="Custom.TButton",
-        width=18,  # Slightly reduced width
-        command=lambda: set_agent('pg')
-    )
-    pg_btn.pack(side='left', padx=(15, 0), ipady=10)  # 15px space to the left
+        # Main text
+        letter_x = start_x
+        for c in text:
+            letter_surface = font.render(c, True, main_color)
+            surface.blit(letter_surface, (letter_x, y))
+            letter_x += font.size(c)[0] + spacing
 
-    # Center the window on the screen
-    root.eval('tk::PlaceWindow . center')
-    root.mainloop()
-    
-    # Return the selected agent type after the window is closed
-    return selected_agent
+    def run(self):
+        while True:
+            mouse_pos = pygame.mouse.get_pos()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.policy_gradient_button.collidepoint(mouse_pos):
+                        pygame.quit()
+                        return "pg"
+                    elif self.q_learning_button.collidepoint(mouse_pos):
+                        pygame.quit()
+                        return "q"
+            self.screen.blit(self.background, (0, 0))
+            # Label background
+            label_bg_rect = pygame.Rect(self.width // 2 - 260, 380, 520, 80)
+            s = pygame.Surface((label_bg_rect.width, label_bg_rect.height), pygame.SRCALPHA)
+            s.fill((40, 0, 80, 180))
+            pygame.draw.rect(s, (40, 0, 80, 180), s.get_rect(), border_radius=30)
+            self.screen.blit(s, label_bg_rect.topleft)
+            # Label
+            self.draw_maze_game_style_text(
+                self.screen, "Select Agent Type",
+                (self.width // 2, 430),
+                self.label_font, self.colors['text'],
+                (180, 120, 255), (0, 0, 0)
+            )
+            # Buttons
+            self.draw_button(
+                self.policy_gradient_button, "Policy Gradient",
+                self.policy_gradient_button.collidepoint(mouse_pos)
+            )
+            self.draw_button(
+                self.q_learning_button, "Q-Learning",
+                self.q_learning_button.collidepoint(mouse_pos)
+            )
+            pygame.display.flip()
+
+def select_agent():
+    return AgentSelector().run() 
