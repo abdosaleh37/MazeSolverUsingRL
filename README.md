@@ -32,26 +32,32 @@ A Python project for training and visualizing reinforcement learning agents (Q-l
 
 ## Usage
 
-1. **Run the main program:**
+. **Make sure you are in the MazeWithReinforcementLearnnig Folder:**
+   ```bash
+   cd MazeWithReinforcementLearning
+  
+
+2. **Run the main program:**
    ```bash
    python main.py
    ```
 
-2. **Select Agent:**
+3. **Select Agent:**
    - Choose between Q-learning and Policy Gradient in the GUI.
    - Adjust hyperparameters if desired.
 
-3. **Train the Agent:**
+4. **Train the Agent:**
    - The agent will train on the maze environment.
    - Training curves (reward and steps) will be displayed.
 
-4. **Visualize the Solution:**
+5. **Visualize the Solution:**
+   - To Show the maze solving press X (quit) on the curves window or wait 10 seconds.
    - After training, the Pygame window will open to show the agent solving the maze.
 
 
 ## Customization
 
-- **Maze Size:** Change in `maze_env.py`.
+- **Maze Size:** Change in `main.py`.
 
 ---
 
@@ -59,4 +65,4 @@ A Python project for training and visualizing reinforcement learning agents (Q-l
 
 - **Flickering/Slow Visualization:** Ensure Pygame is installed and used for rendering.
 - **Agent Stuck or Poor Learning:** Tune learning rate, entropy coefficient, and other hyperparameters in the GUI or agent code.
-- **GUI Issues:** Make sure `ttkbootstrap` is installed.
+- **GUI Issues:** Make sure `pygame` is installed.

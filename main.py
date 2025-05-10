@@ -20,6 +20,16 @@ def main():
         print('No agent selected. Exiting.')
         return
 
+    # # Random movement before learning
+    # print("Maze before learning:")
+    # state = env.reset()
+    # done = False
+    # while not done:
+    #     action = env.action_space.sample()
+    #     next_state, reward, done, _ = env.step(action)
+    #     state = next_state
+    #     env.render()
+    #     time.sleep(0.01)
 
     # Train the agent based on the selection
     if agent_type == 'q':

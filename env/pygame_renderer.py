@@ -67,10 +67,11 @@ class PygameMazeRenderer:
                 
                 if maze[i, j] == 1:  # Wall
                     pygame.draw.rect(self.screen, self.colors['wall'], rect)
+                    pygame.draw.rect(self.screen, self.colors['grid'], rect, 1)
                 else:  # Path
                     pygame.draw.rect(self.screen, self.colors['path'], rect)
                     pygame.draw.rect(self.screen, self.colors['grid'], rect, 1)
-        
+                    
         # Draw the goal
         goal_rect = pygame.Rect(
             goal_pos[1] * self.cell_size,

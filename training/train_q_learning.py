@@ -50,13 +50,13 @@ def train_q_agent(env, num_episodes):
         # After the episode is done, append the results (total reward and total steps)
         rewards.append(total_reward)
         steps.append(total_steps)
-        
-        # Visualize both rewards and steps in one plot
-        plot_learning_curve(rewards=rewards, steps=steps, agent_type="Q Learning")
-        
+    
         # Print the result of the current episode
         print(f"Episode {(episode+1):>3}/{num_episodes} - Total Reward: {total_reward:>4} - Total Steps: {total_steps:>4}")
     
+    # Visualize both rewards and steps in one plot
+    plot_learning_curve(rewards=rewards, steps=steps, agent_type="Q Learning")
+
     # Save the Q-table after training is complete
     q_table_path="training/q_table.pkl"
     agent.save(q_table_path)

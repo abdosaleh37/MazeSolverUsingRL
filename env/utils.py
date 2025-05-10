@@ -1,6 +1,6 @@
 import numpy as np
 
-def generate_maze(size=(10, 10), wall_prob=0.4, max_attempts=100):
+def generate_maze(size, wall_prob=0.4, max_attempts=100):
     """
     Generate a random maze with a guaranteed path from start to goal.
 
@@ -41,7 +41,7 @@ def generate_maze(size=(10, 10), wall_prob=0.4, max_attempts=100):
             attempts += 1
 
     print("Failed to generate a maze with a valid path.")
-    return maze
+    return generate_maze(size=size)
 
 
 # Check if there is a valid path from start to goal using DFS.
