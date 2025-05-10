@@ -22,12 +22,16 @@ class PygameMazeRenderer:
         
         # Colors
         self.colors = {
-            'wall': (50, 50, 50),      # Dark gray
-            'path': (255, 255, 255),   # White
-            'agent': (0, 120, 255),    # Blue
+            'wall': (128, 0, 128),     # Dark violet
+            'path': (147, 112, 219),   # Violet
+            'agent': (0, 120, 255),    # Blue (not used anymore)
             'goal': (255, 215, 0),     # Gold
             'grid': (200, 200, 200)    # Light gray
         }
+        
+        # Load ghost image for agent
+        self.ghost_image = pygame.image.load("assets/ghost.jpg")
+        self.ghost_image = pygame.transform.scale(self.ghost_image, (self.cell_size, self.cell_size))
         
         # Animation properties
         self.animation_speed = 0.2  # seconds per frame
@@ -76,14 +80,14 @@ class PygameMazeRenderer:
         )
         pygame.draw.rect(self.screen, self.colors['goal'], goal_rect)
         
-        # Draw the agent
+        # Draw the agent using the ghost image
         agent_rect = pygame.Rect(
-            agent_pos[1] * self.cell_size + self.cell_size * 0.2,
-            agent_pos[0] * self.cell_size + self.cell_size * 0.2,
-            self.cell_size * 0.6,
-            self.cell_size * 0.6
+            agent_pos[1] * self.cell_size,
+            agent_pos[0] * self.cell_size,
+            self.cell_size,
+            self.cell_size
         )
-        pygame.draw.ellipse(self.screen, self.colors['agent'], agent_rect)
+        self.screen.blit(self.ghost_image, agent_rect)
         
         # Update the display
         pygame.display.flip()
