@@ -58,7 +58,7 @@ def train_pg_agent(env, num_episodes):
         print(f"Episode {(episode+1):>3}/{num_episodes} - Total Reward: {total_reward:>4} - Total Steps: {total_steps:>4}")
 
     # Visualize both rewards and steps in one plot
-    plot_learning_curve(rewards=rewards[3:], steps=steps, agent_type="Policy Gradient")
+    plot_learning_curve(rewards=rewards[3:], steps=steps[3:], agent_type="Policy Gradient")
     
     # Return the trained agent
     return agent

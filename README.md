@@ -32,9 +32,9 @@ A Python project for training and visualizing reinforcement learning agents (Q-l
 
 ## Usage
 
-. **Make sure you are in the MazeWithReinforcementLearnnig Folder:**
+. **Make sure you are in the MazeSolverUsingRL Folder:**
    ```bash
-   cd MazeWithReinforcementLearning
+   cd MazeSolverUsingRL
   
 
 2. **Run the main program:**
