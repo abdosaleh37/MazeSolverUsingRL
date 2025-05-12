@@ -1,7 +1,7 @@
 import numpy as np
 
 class PolicyGradientAgent:
-    def __init__(self, n_states, n_actions, lr=0.185, lr_decay=0.999, entropy_coef=0.01, min_prob=0.05, temperature=1.0):
+    def __init__(self, n_states, n_actions, lr=0.185, lr_decay=0.995, entropy_coef=0.003, min_prob=0.09, temperature=1.0):
         """
         Initialize the Policy Gradient Agent with necessary parameters.
 
@@ -97,7 +97,7 @@ class PolicyGradientAgent:
 
         # Apply learning rate decay
         self.lr *= self.lr_decay
-        self.lr = max(self.lr, 1e-4)
+        self.lr = max(self.lr * self.lr_decay, 1e-5)
 
         # Update the policy for each state-action pair
         for state, action, Gt in zip(self.episode_states, self.episode_actions, returns):

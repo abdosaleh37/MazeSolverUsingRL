@@ -2,7 +2,7 @@ import numpy as np
 import pickle
 
 class QLearningAgent:
-    def __init__(self, action_space, state_size, epsilon=0.025, alpha=0.5, gamma=0.95):
+    def __init__(self, action_space, state_size, epsilon=0.0001, alpha=0.5, gamma=0.95):
         """
         Initialize the Q-learning agent with the necessary parameters.
 

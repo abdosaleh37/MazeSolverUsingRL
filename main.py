@@ -6,7 +6,8 @@ from visualization.select_agent import select_agent
 
 def main():
      # Set the number of episodes for training and the size of the maze
-    num_episodes = 200
+    num_episodes_q = 100
+    num_episodes_pg = 300
     size = (15, 15)
     
     # Initialize the maze environment with the specified size
@@ -33,9 +34,9 @@ def main():
 
     # Train the agent based on the selection
     if agent_type == 'q':
-        agent = train_q_agent(env=env, num_episodes=num_episodes)
+        agent = train_q_agent(env=env, num_episodes=num_episodes_q)
     else:
-        agent = train_pg_agent(env=env, num_episodes=num_episodes)
+        agent = train_pg_agent(env=env, num_episodes=num_episodes_pg)
     
     # Start the simulation after training
     state = env.reset()
