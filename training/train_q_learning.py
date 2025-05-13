@@ -56,11 +56,6 @@ def train_q_agent(env, num_episodes):
     
     # Visualize both rewards and steps in one plot
     plot_learning_curve(rewards=rewards, steps=steps, agent_type="Q Learning")
-
-    # Save the Q-table after training is complete
-    q_table_path="training/q_table.pkl"
-    agent.save(q_table_path)
-    print("Training complete and Q-table saved.")
     
     # Return the trained agent
     return agent

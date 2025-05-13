@@ -7,7 +7,7 @@ from visualization.select_agent import select_agent
 def main():
      # Set the number of episodes for training and the size of the maze
     num_episodes_q = 100
-    num_episodes_pg = 300
+    num_episodes_pg = 2000
     size = (15, 15)
     
     # Initialize the maze environment with the specified size
@@ -21,17 +21,6 @@ def main():
         print('No agent selected. Exiting.')
         return
 
-    # # Random movement before learning
-    # print("Maze before learning:")
-    # state = env.reset()
-    # done = False
-    # while not done:
-    #     action = env.action_space.sample()
-    #     next_state, reward, done, _ = env.step(action)
-    #     state = next_state
-    #     env.render()
-    #     time.sleep(0.01)
-
     # Train the agent based on the selection
     if agent_type == 'q':
         agent = train_q_agent(env=env, num_episodes=num_episodes_q)
@@ -41,16 +30,20 @@ def main():
     # Start the simulation after training
     state = env.reset()
     done = False
-    while not done:
+    running = True
+    while not done and running:
         action = agent.get_action(state)
         next_state, reward, done, _ = env.step(action)
-        env.render()
+        running = env.render()
         state = next_state
         time.sleep(0.1)
     
-    # Wait for the user to press Enter before closing the program
-    input('Press Enter to close...')
-    env.close()
+    if running:
+        waiting = True
+        while waiting:
+            if not env.render():
+                break
+            time.sleep(0.1)
 
 if __name__ == '__main__':
     main()

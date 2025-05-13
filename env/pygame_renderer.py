@@ -1,5 +1,4 @@
 import pygame
-import numpy as np
 
 class PygameMazeRenderer:
     def __init__(self, maze_size, cell_size=40):
